@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>Calendar of Events</title>
+<style type="text/css">
+
+#evtcal a:link {font: normal 12pt "Arial", "Helvetica", "Sans Serif"; color: #004400; text-decoration: none;}		/* not visited link */
+#evtcal a:visited {font: normal 12pt "Arial", "Helvetica", "Sans Serif"; color: #004400; text-decoration: none;}	/* visited link */
+#evtcal a:hover {font: normal 12pt "Arial", "Helvetica", "Sans Serif"; color: #004400; text-decoration: underline;}	/* when mouse hovers link */
+#evtcal a:active {font: normal 12pt "Arial", "Helvetica", "Sans Serif"; color: #004400; text-decoration: none;}		/* selected link */
+
+</style>
+ 
+<script language="JavaScript" type="text/javascript" src="eventList.js"></script>
+
+<script type="text/JavaScript" language="JavaScript">
+
+
+
+							
+
+
+var calString = "";
+
+
+//This function creates the Calendar and populates the Week from Jan 14 to Jan 20, 2018.
+// It also checks if there are any events on a particular day. If there are any events on a particular day,
+//that day is highlighted and when we click the date, the list of events gets populated.
+function createCalendar() {
+	calString = '';
+	var daycounter = 14;
+        var month = "January";
+        var year = "2018";
+
+	calString += '<table width="312" border="1" cellpadding="0" cellspacing="1">';
+	calString += '<tr>';
+	
+	calString += '<td bgcolor=\"#C8C896\" align=\"center\" valign=\"center\" width=\"128\" height=\"40\" colspan=\"7\">January 2018<\/td>';
+	
+	calString += '<\/tr>';
+	calString += '<tr>';
+	calString += '<td bgcolor=\"#DDDDDD\" align=\"center\" valign=\"center\" width=\"40\" height=\"22\">Sun<\/td>';
+	calString += '<td bgcolor=\"#DDDDDD\" align=\"center\" valign=\"center\" width=\"40\" height=\"22\">Mon<\/td>';
+	calString += '<td bgcolor=\"#DDDDDD\" align=\"center\" valign=\"center\" width=\"40\" height=\"22\">Tue<\/td>';
+	calString += '<td bgcolor=\"#DDDDDD\" align=\"center\" valign=\"center\" width=\"40\" height=\"22\">Wed<\/td>';
+	calString += '<td bgcolor=\"#DDDDDD\" align=\"center\" valign=\"center\" width=\"40\" height=\"22\">Thu<\/td>';
+	calString += '<td bgcolor=\"#DDDDDD\" align=\"center\" valign=\"center\" width=\"40\" height=\"22\">Fri<\/td>';
+	calString += '<td bgcolor=\"#DDDDDD\" align=\"center\" valign=\"center\" width=\"40\" height=\"22\">Sat<\/td>';
+	calString += '<\/tr>';
+
+	calString += '<tr>';
+	for (var x = 1; x <= 7; x++) {			
+	    if (checkForEvents(daycounter)){
+		calString += '<td align=\"center\" bgcolor=\"#FFFFC8\" height=\"30\" width=\"40\"><a href=\"javascript:paintCalendar(' + daycounter + ')\">' + daycounter + '<\/a><\/td>';
+	    } else {
+		calString += '<td align=\"center\" bgcolor=\"#DDFFFF\" height=\"30\" width=\"40\">' + daycounter + '<\/td>';
+	    }
+	    daycounter++;
+		
+	}
+
+	calString += '<tr><\/tr><\/table>';
+
+	var object=document.getElementById('calendar');
+	object.innerHTML= calString;
+	
+}
+
+// This function checks if there are any events present on a particular day.
+// It returns true if events are present else returns false.
+function checkForEvents(day) {
+var numevents = 0;
+
+	for (var i = 0; i < events.length; i++) {	
+	  if ((events[i][1] == day)) numevents++;	
+	}
+
+	if (numevents == 0) {
+		return false;
+	} else {
+		return true;
+	}
+}
+
+// This function displays the list of events when user selects a particular day.
+function paintCalendar(day) {
+var event = "";
+
+	for (var i = 0; i < events.length; i++) {
+		// First we'll process recurring events (if any):
+		 if ((events[i][1] == day)) {
+			
+			event += events[i][2] + '\n';
+			event += 'Start Time: ' + events[i][4] + '\n';
+			event += 'Ending Time: ' + events[i][5] + '\n';
+			event += 'Description: ' + events[i][3] + '\n';
+			event += '\n -------------- \n\n';
+			document.forms.eventform.eventlist.value = event;
+		}
+	}
+	if (event == "") document.forms.eventform.eventlist.value = 'No events to display.';
+}
+
+
+
+</script>
+
+</head>
+
+<body style="background-color: transparent;" onload="createCalendar();">
+
+<p align="center">Calendar Widget</p>
+
+<center>
+<table id="evtcal" border="0" cellpadding="0" cellspacing="0" width="584">
+	<tbody>
+		<tr>
+			<td style="padding: 3px;" align="center" bgcolor="#aaddff" valign="top" width="314">
+				<div id="calendar"><!--  Dynamically Filled --></div>
+				</td>
+			<td width="10">&nbsp;</td>
+			<td style="padding: 3px;" align="center" bgcolor="#ffffc8" valign="top" width="260"><b>NOTE:</b><br />Click a highlighted date on the calendar to see event list in the box.<br /><br />
+				<center><b><u>EVENT LIST</u></b>
+				<form id="eventform" name="eventform" action="#" method="get">
+					<textarea name="eventlist" cols="25" rows="11" wrap="soft">Auto filled when clicking on date.</textarea>
+				</form>
+				</center>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</center>
+
+<br />
+
+
+
+</body>
+</html>
